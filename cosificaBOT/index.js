@@ -5,12 +5,12 @@ const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
 const { leave } = Stage;
 const AWS = require('aws-sdk');
-AWS.config.update({region: 'eu-west-1'});
+AWS.config.loadFromPath('./AWS.json');
 
 const db = new AWS.DynamoDB;
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-const menu = new TelegrafInlineMenu(ctx => `Hey ${ctx.from.first_name}!`);
+const menu = new TelegrafInlineMenu(ctx => `La pregunta`);
 let options = ['Troceada', 'Objeto', 'Intercambiable','Maltrato', 'Sexualizada', 'Mercancía','Lienzo'];
 let selectionStatus = [false, false, false, false, false, false, false];
 menu.select('s', options, {
@@ -57,9 +57,18 @@ frame.enter((ctx) => {
     console.log("Entered frame scene");
 
 
-    getFrame();
+    getFrame().then(value => {
+        let frameId = value.frame_id;
+        let url = value.url.S;
+        ctx.session.url = url;
+        ctx.session.frameId = frameId;
+        ctx.replyWithPhoto(url).then(value1 => {
+            ctx.reply("Aquí tienes un frame para analizar. Pulsa /empezar para analizarlo.");
+        });
 
-    ctx.reply("Aquí tienes un frame para analizar. Pulsa /empezar para analizarlo.")
+    })
+
+
 
 });
 
@@ -73,17 +82,17 @@ results.enter((ctx) => {
     ctx.reply(results);
     ctx.reply("Gracias!");
 
-    let storeVote = {
-        TableName: 'votes',
-        Item: {
-            "id": uuidv1(),
-            "question1": ctx.session.vote1,
-            "question2": ctx.session.vote2
-        }
-    };
-    docClient.put(storeVote, function (err, data) {
-
-    })
+    // let storeVote = {
+    //     TableName: 'votes',
+    //     Item: {
+    //         "id": uuidv1(),
+    //         "question1": ctx.session.vote1,
+    //         "question2": ctx.session.vote2
+    //     }
+    // };
+    // docClient.put(storeVote, function (err, data) {
+    //
+    // })
 });
 
 
@@ -125,14 +134,21 @@ bot.startPolling();
 
 
 function getFrame(){
-    let query = {
-        TableName: "voter_email",
-        Key: {
-            'user': {"S": cypEmail.toString()},
-        }
-    };
+    return new Promise(resolve => {
+        let query = {
+            TableName: "cosificabot_frames"
+        };
 
-    db.getItem(query, function (err, data) {
+        db.scan(query, function (err, data) {
 
+            if(err) console.log(err);
+            else{
+                let items = data.Items;
+                let rand = items[Math.floor(Math.random() * items.length)];
+                return resolve(rand);
+
+            }
+        })
     })
+
 }

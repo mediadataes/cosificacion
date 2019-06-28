@@ -299,4 +299,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/node,pydev,linux,macos,windows,pycharm+all,webstorm+all
-
+AWS.json
