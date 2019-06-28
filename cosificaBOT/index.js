@@ -4,9 +4,11 @@ const session = require('telegraf/session');
 const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
 const { leave } = Stage;
+const AWS = require('aws-sdk');
+AWS.config.update({region: 'eu-west-1'});
 
-
-
+const db = new AWS.DynamoDB;
+const docClient = new AWS.DynamoDB.DocumentClient();
 
 const menu = new TelegrafInlineMenu(ctx => `Hey ${ctx.from.first_name}!`);
 let options = ['Troceada', 'Objeto', 'Intercambiable','Maltrato', 'Sexualizada', 'Mercancía','Lienzo'];
@@ -59,15 +61,25 @@ frame.enter((ctx) => {
 
 
 
-
 // Resultados scene
 const results = new Scene('results');
 results.enter((ctx) => {
     console.log("Entered results scene");
     let results = ctx.session.results;
     ctx.reply(results);
-    ctx.reply("Gracias!")
+    ctx.reply("Gracias!");
 
+    let storeVote = {
+        TableName: 'votes',
+        Item: {
+            "id": uuidv1(),
+            "question1": ctx.session.vote1,
+            "question2": ctx.session.vote2
+        }
+    };
+    docClient.put(storeVote, function (err, data) {
+
+    })
 });
 
 

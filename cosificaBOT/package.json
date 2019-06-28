@@ -10,7 +10,12 @@
   "author": "Alejandro González-Pérez",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.484.0",
+    "moment": "^2.24.0",
+    "request": "^2.88.0",
+    "streaming-s3": "^0.4.4",
     "telegraf": "^3.30.1",
-    "telegraf-inline-menu": "^3.6.0"
+    "telegraf-inline-menu": "^3.6.0",
+    "uuid": "^3.3.2"
   }
 }
