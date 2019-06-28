@@ -8,19 +8,9 @@ const { leave } = Stage;
 
 
 
-// Greeter scene
-const greeter = new Scene('greeter');
-greeter.enter((ctx) => ctx.reply('Bienvenidx'));
-ctx.scene.enter('frame');
-
-
-// Frame scene
-const frame = new Scene('frame');
-frame.enter((ctx) => menu.replyMenuMiddleware());
 const menu = new TelegrafInlineMenu(ctx => `Hey ${ctx.from.first_name}!`);
-
 let options = ['Troceada', 'Objeto', 'Intercambiable','Maltrato', 'Sexualizada', 'Mercancía','Lienzo'];
-let selectionStatus = [];
+let selectionStatus = [false, false, false, false, false, false, false];
 menu.select('s', options, {
     setFunc: async (ctx, key) => {
         let index = options.indexOf(key);
@@ -34,8 +24,58 @@ menu.select('s', options, {
     columns: 2
 });
 menu.simpleButton('⏩Enviar⏪', 'c', {
-    doFunc: async ctx => ctx.answerCbQuery('Respuesta enviada.')
+    doFunc: async ctx => {
+        ctx.answerCbQuery('Respuesta enviada.');
+        ctx.session.results = selectionStatus;
+        ctx.scene.enter('results')
+    }
 });
+menu.setCommand('empezar');
+
+
+
+
+
+
+
+
+// Greeter scene
+const greeter = new Scene('greeter');
+greeter.enter((ctx) => {
+    ctx.reply('Bienvenidx');
+    ctx.scene.enter('frame');
+
+});
+
+
+
+// Frame scene
+const frame = new Scene('frame');
+frame.enter((ctx) => {
+    console.log("Entered frame scene");
+    ctx.reply("Aquí tienes un frame para analizar. Pulsa /empezar para analizarlo.")
+
+});
+
+
+
+
+// Resultados scene
+const results = new Scene('results');
+results.enter((ctx) => {
+    console.log("Entered results scene");
+    let results = ctx.session.results;
+    ctx.reply(results);
+    ctx.reply("Gracias!")
+
+});
+
+
+
+
+
+
+
 
 
 
@@ -46,6 +86,7 @@ stage.command('cancel', leave());
 // Scene registration
 stage.register(greeter);
 stage.register(frame);
+stage.register(results);
 
 
 
@@ -55,7 +96,9 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use(session());
 bot.use(stage.middleware());
 bot.use(menu.init());
-
+bot.catch(error => {
+    console.log('telegraf error', error.response, error.parameters, error.on || error)
+});
 
 bot.command('start', (ctx) => ctx.scene.enter('greeter'));
 
