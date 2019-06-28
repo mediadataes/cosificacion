@@ -6,7 +6,7 @@ const TelegrafInlineMenu = require('telegraf-inline-menu');
 const menu = new TelegrafInlineMenu(ctx => `Hey ${ctx.from.first_name}!`);
 menu.setCommand('start');
 
-let options = ['A', 'B', 'C'];
+let options = ['Troceada', 'Objeto', 'Intercambiable','Maltrato', 'Sexualizada', 'Mercancía','Lienzo'];
 let selectionStatus = [];
 let selectedKey = "";
 menu.select('s', options, {
@@ -26,9 +26,10 @@ menu.select('s', options, {
         return selectionStatus[index];
 
 
-    }
+    },
+    columns: 2
 });
-menu.simpleButton('Enviar', 'c', {
+menu.simpleButton('⏩Enviar⏪', 'c', {
     doFunc: async ctx => ctx.answerCbQuery('Respuesta enviada.')
 });
 
