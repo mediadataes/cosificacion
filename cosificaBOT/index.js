@@ -8,24 +8,15 @@ menu.setCommand('start');
 
 let options = ['Troceada', 'Objeto', 'Intercambiable','Maltrato', 'Sexualizada', 'Mercancía','Lienzo'];
 let selectionStatus = [];
-let selectedKey = "";
 menu.select('s', options, {
     setFunc: async (ctx, key) => {
-        let index = options.indexOf(key.toString());
-        selectedKey = key;
+        let index = options.indexOf(key);
         let status = selectionStatus[index];
-
         selectionStatus[index] = !status;
-
-        console.log("SELECTED KEY: "+key+" AT INDEX: "+index);
         await ctx.answerCbQuery(`you selected ${key}`)
     },
     prefixFunc: (_ctx, key) => {
-
-        let index = options.indexOf(key);
-        return selectionStatus[index];
-
-
+        return selectionStatus[options.indexOf(key)];
     },
     columns: 2
 });
