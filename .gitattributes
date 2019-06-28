@@ -1,0 +1,2 @@
+*.mkv filter=lfs diff=lfs merge=lfs -text
+models/detector_model filter=lfs diff=lfs merge=lfs -text
