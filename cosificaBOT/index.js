@@ -55,6 +55,10 @@ greeter.enter((ctx) => {
 const frame = new Scene('frame');
 frame.enter((ctx) => {
     console.log("Entered frame scene");
+
+
+    getFrame();
+
     ctx.reply("Aquí tienes un frame para analizar. Pulsa /empezar para analizarlo.")
 
 });
@@ -116,3 +120,19 @@ bot.command('start', (ctx) => ctx.scene.enter('greeter'));
 
 bot.startPolling();
 
+
+
+
+
+function getFrame(){
+    let query = {
+        TableName: "voter_email",
+        Key: {
+            'user': {"S": cypEmail.toString()},
+        }
+    };
+
+    db.getItem(query, function (err, data) {
+
+    })
+}
