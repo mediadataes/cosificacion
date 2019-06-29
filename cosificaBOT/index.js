@@ -107,7 +107,7 @@ one.enter((ctx) => {
         ctx.reply('El análisis está basado en el Test de Objeto Sexual diseñado por la socióloga americana Caroline Heldman.\n' +
             'Estos son algunos ejemplos para que puedas familiarizarte con los 7 conceptos analizados.').then(value1 => {
             ctx.replyWithPhoto(one).then(value => {
-                ctx.reply('Se muestra solo una parte del cuerpo (tetas, culo). **PARTE**', Extra.HTML().markup((m) =>
+                ctx.reply('Se muestra solo una parte del cuerpo (tetas, culo). ➡️PARTE', Extra.HTML().markup((m) =>
                     m.inlineKeyboard([
                         m.callbackButton('Siguiente', 'next')
                     ])))
@@ -128,7 +128,7 @@ two.enter((ctx) => {
     let two = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/2.jpg";
 
     ctx.replyWithPhoto(two).then(value => {
-        ctx.reply('Se reduce a la mujer a un soporte (silla, mesa). **OBJETO**', Extra.HTML().markup((m) =>
+        ctx.reply('Se reduce a la mujer a un soporte (silla, mesa). ➡️OBJETO', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -147,7 +147,7 @@ three.enter((ctx) => {
     let three = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/3.jpg";
 
     ctx.replyWithPhoto(three).then(value => {
-        ctx.reply('La mujer aparece como algo reemplazable. **DECORATIVA**', Extra.HTML().markup((m) =>
+        ctx.reply('La mujer aparece como algo reemplazable. ➡️DECORATIVA', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -166,7 +166,7 @@ four.enter((ctx) => {
     let four = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/4.jpg";
 
     ctx.replyWithPhoto(four).then(value => {
-        ctx.reply('Se muestra a la mujer maltratada, humillada o como ser inferior. **MALTRATADA**', Extra.HTML().markup((m) =>
+        ctx.reply('Se muestra a la mujer maltratada, humillada o como ser inferior. ➡️MALTRATADA', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -183,7 +183,7 @@ five.enter((ctx) => {
     let five = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/5.jpg";
 
     ctx.replyWithPhoto(five).then(value => {
-        ctx.reply('Se muestra la disponibilidad sexual de la mujer. **SEXUALIZADA**', Extra.HTML().markup((m) =>
+        ctx.reply('Se muestra la disponibilidad sexual de la mujer. ➡️SEXUALIZADA', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -202,7 +202,7 @@ six.enter((ctx) => {
     let six = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/6.jpg";
 
     ctx.replyWithPhoto(six).then(value => {
-        ctx.reply('Se muestra a la mujer como mercancía o alimento. **MERCANCIA**', Extra.HTML().markup((m) =>
+        ctx.reply('Se muestra a la mujer como mercancía o alimento. ➡️MERCANCIA', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -220,7 +220,7 @@ const seven = new Scene('seven');
 seven.enter((ctx) => {
     let seven = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/7.jpg";
     ctx.replyWithPhoto(seven).then(value => {
-        ctx.reply('El cuerpo de la mujer es utilizado para pintar mensajes. **LIENZO**', Extra.HTML().markup((m) =>
+        ctx.reply('El cuerpo de la mujer es utilizado para pintar mensajes. ➡️LIENZO', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Finalizar', 'fin')
             ])))
