@@ -12,42 +12,27 @@ AWS.config.loadFromPath('./AWS.json');
 const db = new AWS.DynamoDB;
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-const menu = new TelegrafInlineMenu(ctx => `La pregunta`);
-let options = ['Troceada', 'Objeto', 'Intercambiable', 'Maltrato', 'Sexualizada', 'Mercancía', 'Lienzo'];
-let selectionStatus = [false, false, false, false, false, false, false];
-menu.select('s', options, {
-    setFunc: async (ctx, key) => {
-        let index = options.indexOf(key);
-        let status = selectionStatus[index];
-        selectionStatus[index] = !status;
-        await ctx.answerCbQuery(`you selected ${key}`)
-    },
-    prefixFunc: (_ctx, key) => {
-        return selectionStatus[options.indexOf(key)];
-    },
-    columns: 2
-});
-menu.simpleButton('⏩Enviar⏪', 'c', {
-    doFunc: async ctx => {
-        ctx.answerCbQuery('Respuesta enviada.');
-        ctx.session.results = selectionStatus;
-        ctx.scene.enter('results')
-    }
-});
-menu.setCommand('empezar');
+
+
+
+
+
+
+
 
 
 // Greeter scene
 const greeter = new Scene('greeter');
 greeter.enter((ctx) => {
-    ctx.reply('¡Bienvenidx!\nAntes de comenzar, necesito saber un poco mas de ti. Por favor responde a estas preguntas 👇');
-    ctx.scene.enter('aboutGenderTraining');
-
+    ctx.reply('¡Bienvenidx!\nAntes de comenzar, necesito saber un poco más de ti.\nPor favor, responde a estas preguntas 👇').then(value => {
+        ctx.scene.enter('aboutGenderTraining');
+        //ctx.scene.enter('frame');
+    });
 });
 
 const aboutGenderTraining = new Scene('aboutGenderTraining');
 aboutGenderTraining.enter((ctx) => {
-    ctx.reply('¿Tienes formación en estudios de géenro?', Extra.HTML().markup((m) =>
+    ctx.reply('¿Tienes formación en estudios de género?', Extra.HTML().markup((m) =>
         m.inlineKeyboard([
             m.callbackButton('Sí', 'yes'),
             m.callbackButton('No', 'no')
@@ -122,7 +107,7 @@ one.enter((ctx) => {
         ctx.reply('El análisis está basado en el Test de Objeto Sexual diseñado por la socióloga americana Caroline Heldman.\n' +
             'Estos son algunos ejemplos para que puedas familiarizarte con los 7 conceptos analizados.').then(value1 => {
             ctx.replyWithPhoto(one).then(value => {
-                ctx.reply('Se muestra sólo una parte del cuerpo (tetas, culo). PARTE', Extra.HTML().markup((m) =>
+                ctx.reply('Se muestra solo una parte del cuerpo (tetas, culo). **PARTE**', Extra.HTML().markup((m) =>
                     m.inlineKeyboard([
                         m.callbackButton('Siguiente', 'next')
                     ])))
@@ -143,7 +128,7 @@ two.enter((ctx) => {
     let two = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/2.jpg";
 
     ctx.replyWithPhoto(two).then(value => {
-        ctx.reply('Se reduce a la mujer a un soporte (silla, mesa). OBJETO', Extra.HTML().markup((m) =>
+        ctx.reply('Se reduce a la mujer a un soporte (silla, mesa). **OBJETO**', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -162,7 +147,7 @@ three.enter((ctx) => {
     let three = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/3.jpg";
 
     ctx.replyWithPhoto(three).then(value => {
-        ctx.reply('La mujer aparece como algo reemplazable. DECORATIVA', Extra.HTML().markup((m) =>
+        ctx.reply('La mujer aparece como algo reemplazable. **DECORATIVA**', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -181,7 +166,7 @@ four.enter((ctx) => {
     let four = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/4.jpg";
 
     ctx.replyWithPhoto(four).then(value => {
-        ctx.reply('Se muestra a la mujer maltratada, humillada o como ser inferior. MALTRATO', Extra.HTML().markup((m) =>
+        ctx.reply('Se muestra a la mujer maltratada, humillada o como ser inferior. **MALTRATADA**', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -198,7 +183,7 @@ five.enter((ctx) => {
     let five = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/5.jpg";
 
     ctx.replyWithPhoto(five).then(value => {
-        ctx.reply('Se muestra la disponibilidad sexual de la mujer. SEXUALIZADA', Extra.HTML().markup((m) =>
+        ctx.reply('Se muestra la disponibilidad sexual de la mujer. **SEXUALIZADA**', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -217,7 +202,7 @@ six.enter((ctx) => {
     let six = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/6.jpg";
 
     ctx.replyWithPhoto(six).then(value => {
-        ctx.reply('Se muestra a la mujer como mercancía o alimento. MERCANCIA', Extra.HTML().markup((m) =>
+        ctx.reply('Se muestra a la mujer como mercancía o alimento. **MERCANCIA**', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Siguiente', 'next')
             ])))
@@ -235,7 +220,7 @@ const seven = new Scene('seven');
 seven.enter((ctx) => {
     let seven = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/7.jpg";
     ctx.replyWithPhoto(seven).then(value => {
-        ctx.reply('El cuerpo de la mujer es utilizado para pintar mensajes. LIENZO', Extra.HTML().markup((m) =>
+        ctx.reply('El cuerpo de la mujer es utilizado para pintar mensajes. **LIENZO**', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
                 m.callbackButton('Finalizar', 'fin')
             ])))
@@ -245,6 +230,7 @@ seven.enter((ctx) => {
 
 seven.on('callback_query', ctx => {
     ctx.answerCbQuery('✅');
+    ctx.reply("Perfecto 👍, ahora ya puedes empezar a clasificar fotogramas.");
     ctx.scene.enter('frame');
 
 
@@ -252,21 +238,15 @@ seven.on('callback_query', ctx => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // Frame scene
 const frame = new Scene('frame');
 frame.enter((ctx) => {
     console.log("Entered frame scene");
+
+
+
+
+
 
     getFrame().then(value => {
         ctx.session.frameId = value.frame_id;
@@ -290,11 +270,125 @@ frame.enter((ctx) => {
         ctx.session.url = value.url.S;
 
 
+
         ctx.replyWithPhoto(ctx.session.url).then(value1 => {
-            ctx.reply("Aquí tienes un frame para analizar. Pulsa /empezar para analizarlo.");
+            ctx.reply("Pulsa sobre las opciones que veas en el fotograma 👇", Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
+                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
+                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
+                    [m.callbackButton('Lienzo', 'Lienzo')],
+                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+                )));
         });
 
     })
+
+});
+frame.on('callback_query', ctx => {
+    let answer = ctx.callbackQuery.data;
+
+    if(answer === "SEND"){
+        ctx.answerCbQuery('✅');
+        ctx.scene.enter('results');
+    }else{
+
+        let options = ['Parte', 'Objeto', 'Decorativa', 'Maltratada', 'Sexualizada', 'Mercancía', 'Lienzo'];
+        let selectionStatus = [false, false, false, false, false, false, false];
+        let index = options.indexOf(answer);
+
+        selectionStatus[index] = true;
+
+        ctx.session.results = selectionStatus;
+
+        let keyboardUpdated = null;
+
+        if(answer === "Parte"){
+            keyboardUpdated = Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    [m.callbackButton('✅Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
+                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
+                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
+                    [m.callbackButton('Lienzo', 'Lienzo')],
+                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+                ));
+
+        }else if(answer === "Decorativa"){
+            keyboardUpdated = Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
+                    [m.callbackButton('✅Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
+                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
+                    [m.callbackButton('Lienzo', 'Lienzo')],
+                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+                ));
+
+        }else if(answer === "Sexualizada"){
+            keyboardUpdated = Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
+                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
+                    [m.callbackButton('✅Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
+                    [m.callbackButton('Lienzo', 'Lienzo')],
+                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+                ));
+
+        }else if(answer === "Lienzo"){
+            keyboardUpdated = Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
+                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
+                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
+                    [m.callbackButton('✅Lienzo', 'Lienzo')],
+                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+                ));
+
+        }else if(answer === "Objeto"){
+            keyboardUpdated = Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('✅Objeto', 'Objeto')],
+                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
+                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
+                    [m.callbackButton('Lienzo', 'Lienzo')],
+                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+                ));
+
+        }else if(answer === "Maltratada"){
+            keyboardUpdated = Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
+                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('✅Maltratada', 'Maltratada')],
+                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
+                    [m.callbackButton('Lienzo', 'Lienzo')],
+                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+                ));
+
+        }else if(answer === "Mercancía"){
+            keyboardUpdated = Extra.HTML().markup((m) =>
+                m.inlineKeyboard([
+                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
+                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
+                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('✅Mercancía', 'Mercancía')],
+                    [m.callbackButton('Lienzo', 'Lienzo')],
+                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+                ));
+
+        }
+
+        ctx.editMessageReplyMarkup(JSON.stringify({inline_keyboard:keyboardUpdated.reply_markup.inline_keyboard}));
+        ctx.answerCbQuery('✅');
+    }
+
+
+
 
 });
 
@@ -314,14 +408,10 @@ results.enter((ctx) => {
     let commodity = results[5];
     let canvas = results[6];
 
-
-    ctx.reply(results);
-    ctx.reply("Gracias!");
-
     let imagen = {
-        TableName: 'cosificabot_frames',
+        TableName: 'cosificacion_results',
         Item: {
-            "frame_id": ctx.session.frameId,
+            "frame_id": ctx.session.frameId.toString(),
 
             "title": ctx.session.title,
             "artists": ctx.session.artists,
@@ -353,6 +443,18 @@ results.enter((ctx) => {
         }
     };
 
+    docClient.put(imagen, function (err, data) {
+        if (err) {
+            console.error("Error storing message received: " + err);
+        }else {
+            console.log("Result registered correctly.");
+            ctx.reply("¡Muchas gracias! Si quieres clasificar otro fotograma, pulsa /clasificar")
+        }
+    });
+
+});
+results.command('clasificar', (ctx)=>{
+    ctx.scene.enter('frame');
 });
 
 
@@ -380,7 +482,6 @@ stage.register(results);
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use(session());
 bot.use(stage.middleware());
-bot.use(menu.init());
 bot.catch(error => {
     console.log('telegraf error', error.response, error.parameters, error.on || error)
 });
