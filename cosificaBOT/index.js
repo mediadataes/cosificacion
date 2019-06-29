@@ -120,7 +120,7 @@ one.enter((ctx) => {
 
     ctx.reply('¡Perfecto!\nAhora vamos a aprender cómo clasificar un fotograma en función de diversos parámetros.').then(value => {
         ctx.reply('El análisis está basado en el Test de Objeto Sexual diseñado por la socióloga americana Caroline Heldman.\n' +
-            'Estos son algunos ejemplos para que puedas familiarizarte con los conceptos analizados.').then(value1 => {
+            'Estos son algunos ejemplos para que puedas familiarizarte con los 7 conceptos analizados.').then(value1 => {
             ctx.replyWithPhoto(one).then(value => {
                 ctx.reply('Se muestra sólo una parte del cuerpo (tetas, culo). PARTE', Extra.HTML().markup((m) =>
                     m.inlineKeyboard([
