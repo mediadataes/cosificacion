@@ -1,4 +1,5 @@
 const Telegraf = require('telegraf');
+const uuidv1 = require('uuid/v1');
 const session = require('telegraf/session');
 const Extra = require('telegraf/extra');
 const Stage = require('telegraf/stage');
@@ -333,6 +334,7 @@ results.enter((ctx) => {
     let imagen = {
         TableName: 'cosificacion_results',
         Item: {
+            "id": uuidv1(),
             "frame_id": ctx.session.frameId.S,
 
             "title": ctx.session.title.S,
