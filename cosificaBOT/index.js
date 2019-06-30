@@ -17,16 +17,13 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 
 
 
-
-
-
-
 // Greeter scene
 const greeter = new Scene('greeter');
 greeter.enter((ctx) => {
     ctx.reply('¡Bienvenidx!\nAntes de comenzar, necesito saber un poco más de ti.\nPor favor, responde a estas preguntas 👇').then(value => {
-        ctx.scene.enter('aboutGenderTraining');
-        //ctx.scene.enter('frame');
+        //TODO: ctx.scene.enter('aboutGenderTraining');
+        ctx.scene.enter('frame');
+        ctx.session.results = [false, false, false, false, false, false, false];
     });
 });
 
@@ -272,13 +269,13 @@ frame.enter((ctx) => {
 
 
         ctx.replyWithPhoto(ctx.session.url).then(value1 => {
-            ctx.reply("Pulsa sobre las opciones que veas en el fotograma 👇", Extra.HTML().markup((m) =>
+            ctx.reply("Pulsa sobre las opciones que veas en el fotograma 👇\nEn caso de no encontrar ninguna de las opciones, símplemente haz click sobre ENVIAR", Extra.HTML().markup((m) =>
                 m.inlineKeyboard([
                     [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
                     [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
                     [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
                     [m.callbackButton('Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+                    [m.callbackButton('⏩ENVIAR⏪','SEND')]]
 
                 )));
         });
@@ -295,93 +292,37 @@ frame.on('callback_query', ctx => {
     }else{
 
         let options = ['Parte', 'Objeto', 'Decorativa', 'Maltratada', 'Sexualizada', 'Mercancía', 'Lienzo'];
-        let selectionStatus = [false, false, false, false, false, false, false];
         let index = options.indexOf(answer);
+        let selectionStatus = ctx.session.results;
 
-        selectionStatus[index] = true;
-
+        selectionStatus[index] = !selectionStatus[index];
         ctx.session.results = selectionStatus;
 
-        let keyboardUpdated = null;
+        let keyOptions = ['Parte', 'Objeto', 'Decorativa', 'Maltratada', 'Sexualizada', 'Mercancía', 'Lienzo'];
 
-        if(answer === "Parte"){
-            keyboardUpdated = Extra.HTML().markup((m) =>
-                m.inlineKeyboard([
-                    [m.callbackButton('✅Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
-                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
-                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
-                    [m.callbackButton('Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩Enviar⏪','SEND')]]
 
-                ));
+        let tick = "✅";
 
-        }else if(answer === "Decorativa"){
-            keyboardUpdated = Extra.HTML().markup((m) =>
-                m.inlineKeyboard([
-                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
-                    [m.callbackButton('✅Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
-                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
-                    [m.callbackButton('Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩Enviar⏪','SEND')]]
+        for(let i = 0; i<selectionStatus.length; i++){
+            let status = selectionStatus[i];
+            if(status){
+                keyOptions[i] = tick+keyOptions[i];
 
-                ));
-
-        }else if(answer === "Sexualizada"){
-            keyboardUpdated = Extra.HTML().markup((m) =>
-                m.inlineKeyboard([
-                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
-                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
-                    [m.callbackButton('✅Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
-                    [m.callbackButton('Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩Enviar⏪','SEND')]]
-
-                ));
-
-        }else if(answer === "Lienzo"){
-            keyboardUpdated = Extra.HTML().markup((m) =>
-                m.inlineKeyboard([
-                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
-                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
-                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
-                    [m.callbackButton('✅Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩Enviar⏪','SEND')]]
-
-                ));
-
-        }else if(answer === "Objeto"){
-            keyboardUpdated = Extra.HTML().markup((m) =>
-                m.inlineKeyboard([
-                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('✅Objeto', 'Objeto')],
-                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
-                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
-                    [m.callbackButton('Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩Enviar⏪','SEND')]]
-
-                ));
-
-        }else if(answer === "Maltratada"){
-            keyboardUpdated = Extra.HTML().markup((m) =>
-                m.inlineKeyboard([
-                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
-                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('✅Maltratada', 'Maltratada')],
-                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
-                    [m.callbackButton('Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩Enviar⏪','SEND')]]
-
-                ));
-
-        }else if(answer === "Mercancía"){
-            keyboardUpdated = Extra.HTML().markup((m) =>
-                m.inlineKeyboard([
-                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
-                    [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
-                    [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('✅Mercancía', 'Mercancía')],
-                    [m.callbackButton('Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩Enviar⏪','SEND')]]
-
-                ));
-
+            }else{
+                keyOptions[i] = options[i];
+            }
         }
+
+
+        let keyboardUpdated = Extra.HTML().markup((m) =>
+            m.inlineKeyboard([
+                [m.callbackButton(keyOptions[0], 'Parte'),m.callbackButton(keyOptions[1], 'Objeto')],
+                [m.callbackButton(keyOptions[2], 'Decorativa'), m.callbackButton(keyOptions[3], 'Maltratada')],
+                [m.callbackButton(keyOptions[4], 'Sexualizada'), m.callbackButton(keyOptions[5], 'Mercancía')],
+                [m.callbackButton(keyOptions[6], 'Lienzo')],
+                [m.callbackButton('⏩Enviar⏪','SEND')]]
+
+            ));
 
         ctx.editMessageReplyMarkup(JSON.stringify({inline_keyboard:keyboardUpdated.reply_markup.inline_keyboard}));
         ctx.answerCbQuery('✅');
