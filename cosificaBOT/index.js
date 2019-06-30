@@ -1,5 +1,4 @@
 const Telegraf = require('telegraf');
-const TelegrafInlineMenu = require('telegraf-inline-menu');
 const session = require('telegraf/session');
 const Extra = require('telegraf/extra');
 const Stage = require('telegraf/stage');
@@ -13,16 +12,12 @@ const db = new AWS.DynamoDB;
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 
-
-
-
-
 // Greeter scene
 const greeter = new Scene('greeter');
 greeter.enter((ctx) => {
     ctx.reply('¡Bienvenidx!\nAntes de comenzar, necesito saber un poco más de ti.\nPor favor, responde a estas preguntas 👇').then(value => {
-        //TODO: ctx.scene.enter('aboutGenderTraining');
-        ctx.scene.enter('frame');
+        ctx.scene.enter('aboutGenderTraining');
+        //ctx.scene.enter('frame');
         ctx.session.results = [false, false, false, false, false, false, false];
     });
 });
@@ -234,15 +229,10 @@ seven.on('callback_query', ctx => {
 });
 
 
-
 // Frame scene
 const frame = new Scene('frame');
 frame.enter((ctx) => {
     console.log("Entered frame scene");
-
-
-
-
 
 
     getFrame().then(value => {
@@ -267,16 +257,14 @@ frame.enter((ctx) => {
         ctx.session.url = value.url.S;
 
 
-
         ctx.replyWithPhoto(ctx.session.url).then(value1 => {
             ctx.reply("Pulsa sobre las opciones que veas en el fotograma 👇\nEn caso de no encontrar ninguna de las opciones, símplemente haz click sobre ENVIAR", Extra.HTML().markup((m) =>
                 m.inlineKeyboard([
-                    [m.callbackButton('Parte', 'Parte'),m.callbackButton('Objeto', 'Objeto')],
+                    [m.callbackButton('Parte', 'Parte'), m.callbackButton('Objeto', 'Objeto')],
                     [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
                     [m.callbackButton('Sexualizada', 'Sexualizada'), m.callbackButton('Mercancía', 'Mercancía')],
                     [m.callbackButton('Lienzo', 'Lienzo')],
-                    [m.callbackButton('⏩ENVIAR⏪','SEND')]]
-
+                    [m.callbackButton('⏩ENVIAR⏪', 'SEND')]]
                 )));
         });
 
@@ -286,10 +274,10 @@ frame.enter((ctx) => {
 frame.on('callback_query', ctx => {
     let answer = ctx.callbackQuery.data;
 
-    if(answer === "SEND"){
+    if (answer === "SEND") {
         ctx.answerCbQuery('✅');
         ctx.scene.enter('results');
-    }else{
+    } else {
 
         let options = ['Parte', 'Objeto', 'Decorativa', 'Maltratada', 'Sexualizada', 'Mercancía', 'Lienzo'];
         let index = options.indexOf(answer);
@@ -303,34 +291,26 @@ frame.on('callback_query', ctx => {
 
         let tick = "✅";
 
-        for(let i = 0; i<selectionStatus.length; i++){
+        for (let i = 0; i < selectionStatus.length; i++) {
             let status = selectionStatus[i];
-            if(status){
-                keyOptions[i] = tick+keyOptions[i];
+            if (status) {
+                keyOptions[i] = tick + keyOptions[i];
 
-            }else{
+            } else {
                 keyOptions[i] = options[i];
             }
         }
-
-
         let keyboardUpdated = Extra.HTML().markup((m) =>
             m.inlineKeyboard([
-                [m.callbackButton(keyOptions[0], 'Parte'),m.callbackButton(keyOptions[1], 'Objeto')],
+                [m.callbackButton(keyOptions[0], 'Parte'), m.callbackButton(keyOptions[1], 'Objeto')],
                 [m.callbackButton(keyOptions[2], 'Decorativa'), m.callbackButton(keyOptions[3], 'Maltratada')],
                 [m.callbackButton(keyOptions[4], 'Sexualizada'), m.callbackButton(keyOptions[5], 'Mercancía')],
                 [m.callbackButton(keyOptions[6], 'Lienzo')],
-                [m.callbackButton('⏩Enviar⏪','SEND')]]
-
+                [m.callbackButton('⏩Enviar⏪', 'SEND')]]
             ));
-
-        ctx.editMessageReplyMarkup(JSON.stringify({inline_keyboard:keyboardUpdated.reply_markup.inline_keyboard}));
+        ctx.editMessageReplyMarkup(JSON.stringify({inline_keyboard: keyboardUpdated.reply_markup.inline_keyboard}));
         ctx.answerCbQuery('✅');
     }
-
-
-
-
 });
 
 
@@ -349,18 +329,19 @@ results.enter((ctx) => {
     let commodity = results[5];
     let canvas = results[6];
 
+
     let imagen = {
         TableName: 'cosificacion_results',
         Item: {
-            "frame_id": ctx.session.frameId.toString(),
+            "frame_id": ctx.session.frameId.S,
 
-            "title": ctx.session.title,
-            "artists": ctx.session.artists,
+            "title": ctx.session.title.S,
+            "artists": ctx.session.artists.S,
 
-            "ai_male_genitalia": ctx.session.aiMaleGenitalia,
-            "ai_female_genitalia": ctx.session.aiFemaleGenitalia,
-            "ai_male_breast": ctx.session.aiMaleBreast,
-            "ai_female_breast": ctx.session.aiFemaleBreast,
+            "ai_male_genitalia": ctx.session.aiMaleGenitalia.N,
+            "ai_female_genitalia": ctx.session.aiFemaleGenitalia.N,
+            "ai_male_breast": ctx.session.aiMaleBreast.N,
+            "ai_female_breast": ctx.session.aiFemaleBreast.N,
 
             "tel_focused": focused,
             "tel_object": object,
@@ -374,10 +355,10 @@ results.enter((ctx) => {
             "usr_gender": ctx.session.usrGender,
             "usr_age": ctx.session.userAge,
 
-            "created": ctx.session.created,
+            "created": ctx.session.created.S,
             "updated": moment().format(),
-            "co_analyzed": ctx.session.coAnalyzed,
-            "ai_analyzed": ctx.session.aiAnalyzed,
+            "co_analyzed": true,
+            "ai_analyzed": ctx.session.aiAnalyzed.BOOL,
 
             "url": ctx.session.url
 
@@ -387,14 +368,14 @@ results.enter((ctx) => {
     docClient.put(imagen, function (err, data) {
         if (err) {
             console.error("Error storing message received: " + err);
-        }else {
+        } else {
             console.log("Result registered correctly.");
             ctx.reply("¡Muchas gracias! Si quieres clasificar otro fotograma, pulsa /clasificar")
         }
     });
 
 });
-results.command('clasificar', (ctx)=>{
+results.command('clasificar', (ctx) => {
     ctx.scene.enter('frame');
 });
 
