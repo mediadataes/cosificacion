@@ -6,11 +6,6 @@ const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
 const moment = require('moment');
 const {leave} = Stage;
-const AWS = require('aws-sdk');
-AWS.config.loadFromPath('./AWS.json');
-
-const db = new AWS.DynamoDB;
-const docClient = new AWS.DynamoDB.DocumentClient();
 
 
 // Greeter scene
@@ -94,9 +89,9 @@ aboutAge.on('message', ctx => {
 // Training scenes
 const one = new Scene('one');
 one.enter((ctx) => {
-    let one = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/1.jpg";
+    let one = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/11.jpg";
 
-    ctx.reply('¡Perfecto!\nAhora vamos a aprender cómo clasificar un fotograma en función de diversos parámetros.').then(value => {
+    ctx.reply('¡Perfecto!\nAhora vamos a aprender cómo clasificar un clip en función de diversos parámetros.').then(value => {
         ctx.reply('El análisis está basado en el Test de Objeto Sexual diseñado por la socióloga americana Caroline Heldman.\n' +
             'Estos son algunos ejemplos para que puedas familiarizarte con los 7 conceptos analizados.').then(value1 => {
             ctx.replyWithPhoto(one).then(value => {
@@ -118,7 +113,7 @@ one.on('callback_query', ctx => {
 });
 const two = new Scene('two');
 two.enter((ctx) => {
-    let two = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/2.jpg";
+    let two = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/22.jpg";
 
     ctx.replyWithPhoto(two).then(value => {
         ctx.reply('Se reduce a la mujer a un soporte (silla, mesa). ➡️OBJETO', Extra.HTML().markup((m) =>
@@ -137,7 +132,7 @@ two.on('callback_query', ctx => {
 });
 const three = new Scene('three');
 three.enter((ctx) => {
-    let three = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/3.jpg";
+    let three = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/33.jpg";
 
     ctx.replyWithPhoto(three).then(value => {
         ctx.reply('La mujer aparece como algo reemplazable. ➡️DECORATIVA', Extra.HTML().markup((m) =>
@@ -156,7 +151,7 @@ three.on('callback_query', ctx => {
 });
 const four = new Scene('four');
 four.enter((ctx) => {
-    let four = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/4.jpg";
+    let four = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/44.jpg";
 
     ctx.replyWithPhoto(four).then(value => {
         ctx.reply('Se muestra a la mujer maltratada, humillada o como ser inferior. ➡️MALTRATADA', Extra.HTML().markup((m) =>
@@ -173,7 +168,7 @@ four.on('callback_query', ctx => {
 });
 const five = new Scene('five');
 five.enter((ctx) => {
-    let five = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/5.jpg";
+    let five = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/55.jpg";
 
     ctx.replyWithPhoto(five).then(value => {
         ctx.reply('Se muestra la disponibilidad sexual de la mujer. ➡️SEXUALIZADA', Extra.HTML().markup((m) =>
@@ -192,7 +187,7 @@ five.on('callback_query', ctx => {
 });
 const six = new Scene('six');
 six.enter((ctx) => {
-    let six = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/6.jpg";
+    let six = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/66.jpg";
 
     ctx.replyWithPhoto(six).then(value => {
         ctx.reply('Se muestra a la mujer como mercancía o alimento. ➡️MERCANCIA', Extra.HTML().markup((m) =>
@@ -211,7 +206,7 @@ six.on('callback_query', ctx => {
 });
 const seven = new Scene('seven');
 seven.enter((ctx) => {
-    let seven = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/7.jpg";
+    let seven = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/77.jpg";
     ctx.replyWithPhoto(seven).then(value => {
         ctx.reply('El cuerpo de la mujer es utilizado para pintar mensajes. ➡️LIENZO', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
@@ -223,7 +218,7 @@ seven.enter((ctx) => {
 
 seven.on('callback_query', ctx => {
     ctx.answerCbQuery('✅');
-    ctx.reply("Perfecto 👍, ahora ya puedes empezar a clasificar fotogramas.");
+    ctx.reply("Perfecto 👍, ahora ya puedes empezar a clasificar clips.");
     ctx.scene.enter('frame');
 
 
@@ -236,30 +231,10 @@ frame.enter((ctx) => {
     console.log("Entered frame scene");
 
 
-    getFrame().then(value => {
-        ctx.session.frameId = value.frame_id;
-        ctx.session.title = value.title;
-        ctx.session.artists = value.artists;
-        ctx.session.aiMaleGenitalia = value.ai_male_genitalia;
-        ctx.session.aiFemaleGenitalia = value.ai_female_genitalia;
-        ctx.session.aiMaleBreast = value.ai_male_breast;
-        ctx.session.aiFemaleBreast = value.ai_female_breast;
-        ctx.session.telFocused = value.tel_focused;
-        ctx.session.telObject = value.tel_object;
-        ctx.session.telDecorative = value.tel_decorative;
-        ctx.session.telAbused = value.tel_abused;
-        ctx.session.telSexualized = value.tel_sexualized;
-        ctx.session.telComodity = value.tel_commodity;
-        ctx.session.telCanvas = value.tel_canvas;
+    getClip().then(link => {
 
-        ctx.session.created = value.created;
-        ctx.session.coAnalyzed = value.co_analyzed;
-        ctx.session.aiAnalyzed = value.ai_analyzed;
-        ctx.session.url = value.url.S;
-
-
-        ctx.replyWithPhoto(ctx.session.url).then(value1 => {
-            ctx.reply("Pulsa sobre las opciones que veas en el fotograma 👇\nEn caso de no encontrar ninguna de las opciones, símplemente haz click sobre ENVIAR", Extra.HTML().markup((m) =>
+        ctx.replyWithVideo(link).then(value1 => {
+            ctx.reply("Pulsa sobre las opciones que veas en el clip 👇\nEn caso de no encontrar ninguna de las opciones, símplemente haz click sobre ENVIAR", Extra.HTML().markup((m) =>
                 m.inlineKeyboard([
                     [m.callbackButton('Parte', 'Parte'), m.callbackButton('Objeto', 'Objeto')],
                     [m.callbackButton('Decorativa', 'Decorativa'), m.callbackButton('Maltratada', 'Maltratada')],
@@ -331,51 +306,9 @@ results.enter((ctx) => {
     let commodity = results[5];
     let canvas = results[6];
 
+    ctx.reply("¡Muchas gracias! Si quieres clasificar otro clip, pulsa /clasificar")
 
-    let imagen = {
-        TableName: 'cosificacion_results',
-        Item: {
-            "id": uuidv1(),
-            "frame_id": ctx.session.frameId.S,
 
-            "title": ctx.session.title.S,
-            "artists": ctx.session.artists.S,
-
-            "ai_male_genitalia": ctx.session.aiMaleGenitalia.N,
-            "ai_female_genitalia": ctx.session.aiFemaleGenitalia.N,
-            "ai_male_breast": ctx.session.aiMaleBreast.N,
-            "ai_female_breast": ctx.session.aiFemaleBreast.N,
-
-            "tel_focused": focused,
-            "tel_object": object,
-            "tel_decorative": decorative,
-            "tel_abused": abused,
-            "tel_sexualized": sexualized,
-            "tel_commodity": commodity,
-            "tel_canvas": canvas,
-
-            "usr_gender_training": ctx.session.usrGenderTraining,
-            "usr_gender": ctx.session.usrGender,
-            "usr_age": ctx.session.userAge,
-
-            "created": ctx.session.created.S,
-            "updated": moment().format(),
-            "co_analyzed": true,
-            "ai_analyzed": ctx.session.aiAnalyzed.BOOL,
-
-            "url": ctx.session.url
-
-        }
-    };
-
-    docClient.put(imagen, function (err, data) {
-        if (err) {
-            console.error("Error storing message received: " + err);
-        } else {
-            console.log("Result registered correctly.");
-            ctx.reply("¡Muchas gracias! Si quieres clasificar otro fotograma, pulsa /clasificar")
-        }
-    });
 
 });
 results.command('clasificar', (ctx) => {
@@ -416,22 +349,24 @@ bot.command('start', (ctx) => ctx.scene.enter('greeter'));
 bot.startPolling();
 
 
-function getFrame() {
-    return new Promise(resolve => {
-        let query = {
-            TableName: "cosificabot_frames"
-        };
-
-        db.scan(query, function (err, data) {
-
-            if (err) console.log(err);
-            else {
-                let items = data.Items;
-                let rand = items[Math.floor(Math.random() * items.length)];
-                return resolve(rand);
-
-            }
-        })
-    })
+function getClip (){
+    return new Promise((resolve, reject) => {
+        let items = [
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-1-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-2-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-3-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-4-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-5-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-6-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-7-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-8-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-9-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-10-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-11-of-12.mp4",
+            "https://s3.eu-central-1.amazonaws.com/cosificacion.bot.clips/Aitana%2C+Lola+Indigo+-+Me+Quedo-SJcm2dLUjVo-12-of-12.mp4"
+        ];
+        let rand = items[Math.floor(Math.random() * items.length)];
+        return resolve(rand);
+    });
 
 }
