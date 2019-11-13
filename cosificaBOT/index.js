@@ -94,7 +94,7 @@ aboutAge.on('message', ctx => {
 // Training scenes
 const one = new Scene('one');
 one.enter((ctx) => {
-    let one = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/1.jpg";
+    let one = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/1.jpg";
 
     ctx.reply('¡Perfecto!\nAhora vamos a aprender cómo clasificar un fotograma en función de diversos parámetros.').then(value => {
         ctx.reply('El análisis está basado en el Test de Objeto Sexual diseñado por la socióloga americana Caroline Heldman.\n' +
@@ -118,7 +118,7 @@ one.on('callback_query', ctx => {
 });
 const two = new Scene('two');
 two.enter((ctx) => {
-    let two = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/2.jpg";
+    let two = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/2.jpg";
 
     ctx.replyWithPhoto(two).then(value => {
         ctx.reply('Se reduce a la mujer a un soporte (silla, mesa). ➡️OBJETO', Extra.HTML().markup((m) =>
@@ -137,7 +137,7 @@ two.on('callback_query', ctx => {
 });
 const three = new Scene('three');
 three.enter((ctx) => {
-    let three = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/3.jpg";
+    let three = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/3.jpg";
 
     ctx.replyWithPhoto(three).then(value => {
         ctx.reply('La mujer aparece como algo reemplazable. ➡️DECORATIVA', Extra.HTML().markup((m) =>
@@ -156,7 +156,7 @@ three.on('callback_query', ctx => {
 });
 const four = new Scene('four');
 four.enter((ctx) => {
-    let four = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/4.jpg";
+    let four = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/4.jpg";
 
     ctx.replyWithPhoto(four).then(value => {
         ctx.reply('Se muestra a la mujer maltratada, humillada o como ser inferior. ➡️MALTRATADA', Extra.HTML().markup((m) =>
@@ -173,7 +173,7 @@ four.on('callback_query', ctx => {
 });
 const five = new Scene('five');
 five.enter((ctx) => {
-    let five = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/5.jpg";
+    let five = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/5.jpg";
 
     ctx.replyWithPhoto(five).then(value => {
         ctx.reply('Se muestra la disponibilidad sexual de la mujer. ➡️SEXUALIZADA', Extra.HTML().markup((m) =>
@@ -192,7 +192,7 @@ five.on('callback_query', ctx => {
 });
 const six = new Scene('six');
 six.enter((ctx) => {
-    let six = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/6.jpg";
+    let six = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/6.jpg";
 
     ctx.replyWithPhoto(six).then(value => {
         ctx.reply('Se muestra a la mujer como mercancía o alimento. ➡️MERCANCIA', Extra.HTML().markup((m) =>
@@ -211,7 +211,7 @@ six.on('callback_query', ctx => {
 });
 const seven = new Scene('seven');
 seven.enter((ctx) => {
-    let seven = "https://s3.eu-central-1.amazonaws.com/bot.cosificacion/7.jpg";
+    let seven = "https://s3.eu-central-1.amazonaws.com/cosificacion.bot/7.jpg";
     ctx.replyWithPhoto(seven).then(value => {
         ctx.reply('El cuerpo de la mujer es utilizado para pintar mensajes. ➡️LIENZO', Extra.HTML().markup((m) =>
             m.inlineKeyboard([
