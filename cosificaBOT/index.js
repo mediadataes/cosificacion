@@ -321,6 +321,7 @@ results.enter((ctx) => {
     console.log("Entered results scene");
 
     let results = ctx.session.results;
+    ctx.session.results = [false, false, false, false, false, false, false];
 
     let focused = results[0];
     let object = results[1];
